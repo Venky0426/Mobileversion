@@ -1,0 +1,15 @@
+{
+  "name": "codershub-notification-server",
+  "version": "1.0.0",
+  "description": "Backend Push Notification Dispatcher for CodersHub (Firebase Spark compatible)",
+  "main": "notificationServer.js",
+  "scripts": {
+    "start": "node notificationServer.js"
+  },
+  "dependencies": {
+    "firebase-admin": "^12.0.0",
+    "expo-server-sdk": "^3.9.0",
+    "dotenv": "^16.4.5"
+  }
+}
+

@@ -1,0 +1,35 @@
+const { getDefaultConfig } = require("expo/metro-config");
+const { withNativeWind } = require("nativewind/metro");
+const path = require("path");
+
+const config = getDefaultConfig(__dirname);
+
+if (!config.resolver.sourceExts.includes("cjs")) {
+  config.resolver.sourceExts.push("cjs");
+}
+
+// Ensure custom package mappings resolve smoothly across Metro
+const defaultResolveRequest = config.resolver.resolveRequest;
+config.resolver.resolveRequest = (context, moduleName, platform) => {
+  if (moduleName === "@firebase/app" || moduleName === "firebase/app") {
+    return {
+      filePath: path.resolve(__dirname, "node_modules/@firebase/app/dist/index.cjs.js"),
+      type: "sourceFile",
+    };
+  }
+  if (moduleName === "react-native/asset-registry" || moduleName === "@react-native/assets-registry") {
+    return {
+      filePath: path.resolve(__dirname, "node_modules/react-native/src/asset-registry.js"),
+      type: "sourceFile",
+    };
+  }
+  if (moduleName === "react-native/react-private-interface") {
+    return {
+      filePath: path.resolve(__dirname, "node_modules/react-native/src/react-private-interface.js"),
+      type: "sourceFile",
+    };
+  }
+  return (defaultResolveRequest || context.resolveRequest)(context, moduleName, platform);
+};
+
+module.exports = withNativeWind(config, { input: "./src/global.css" });
