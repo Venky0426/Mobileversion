@@ -1,12 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, Image, ScrollView, TextInput, Modal, ActivityIndicator, Linking } from 'react-native';
+<<<<<<< HEAD
 import { Edit2, Share2, Plus, ExternalLink, Heart, MessageCircle, Download, LogOut, Camera, Search, Check, Send, Link, X, Bell } from 'lucide-react-native';
+=======
+import { Edit2, Share2, Plus, ExternalLink, Heart, MessageCircle, Download, LogOut, Camera, Search, Check, Send, Link, X } from 'lucide-react-native';
+>>>>>>> 47463a7a08d38f17ffd1b4b51c6b0edcb0c65697
 import { useNavigation } from '@react-navigation/native';
 import { auth, db } from '../firebase';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { collection, query, where, getDocs, updateDoc, doc } from 'firebase/firestore';
 import * as ImagePicker from 'expo-image-picker';
+<<<<<<< HEAD
 import { unregisterPushTokenAsync } from '../services/notificationService';
+=======
+>>>>>>> 47463a7a08d38f17ffd1b4b51c6b0edcb0c65697
 
 const domainsList = [
   'Backend Development', 'Web Development', 'Mobile App Development', 
@@ -78,9 +85,12 @@ export default function ProfileDashboardScreen() {
 
   const handleLogout = async () => {
     try {
+<<<<<<< HEAD
       if (auth.currentUser) {
         await unregisterPushTokenAsync(auth.currentUser.uid);
       }
+=======
+>>>>>>> 47463a7a08d38f17ffd1b4b51c6b0edcb0c65697
       await signOut(auth);
       navigation.replace('Login');
     } catch (error) {
@@ -238,10 +248,13 @@ export default function ProfileDashboardScreen() {
                 <Edit2 size={14} color="white" />
                 <Text className="ml-2 font-medium text-white">Edit</Text>
               </TouchableOpacity>
+<<<<<<< HEAD
               <TouchableOpacity onPress={() => navigation.navigate('NotificationSettings')} className="px-4 py-2 border border-blue-200 bg-blue-50 rounded-full flex-row items-center">
                 <Bell size={14} color="#0a66c2" />
                 <Text className="ml-2 font-medium text-[#0a66c2]">Notifications</Text>
               </TouchableOpacity>
+=======
+>>>>>>> 47463a7a08d38f17ffd1b4b51c6b0edcb0c65697
               <TouchableOpacity onPress={handleLogout} className="px-4 py-2 border border-red-200 bg-red-50 rounded-full flex-row items-center">
                 <LogOut size={14} color="#dc2626" />
                 <Text className="ml-2 font-medium text-red-600">Log Out</Text>

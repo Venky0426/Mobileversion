@@ -241,8 +241,27 @@ const Messages = () => {
           
           <div className="p-4 pt-0">
             <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Direct Messages</h3>
+<<<<<<< HEAD
             <div className="p-3 bg-gray-50 rounded-lg text-center">
               <p className="text-xs text-gray-500">Direct messages unlock once a connection request is accepted in the mobile app.</p>
+=======
+            <div className="space-y-1">
+              {[1, 2].map((user) => (
+                <div key={user} className="flex items-center gap-3 p-2 rounded-lg cursor-not-allowed hover:bg-gray-100/50 transition-colors opacity-70">
+                  <div className="relative">
+                    <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=dm${user}`} alt="User" className="w-10 h-10 rounded-full bg-white" />
+                    <Circle className={clsx("absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-white fill-current", user % 2 === 0 ? "text-green-500" : "text-gray-400")} />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex justify-between items-baseline mb-0.5">
+                      <p className="text-sm font-medium text-gray-900 truncate">Developer {user}</p>
+                      <span className="text-xs text-gray-500">2h</span>
+                    </div>
+                    <p className="text-xs text-gray-500 truncate">DM chats are coming soon...</p>
+                  </div>
+                </div>
+              ))}
+>>>>>>> 47463a7a08d38f17ffd1b4b51c6b0edcb0c65697
             </div>
           </div>
         </div>

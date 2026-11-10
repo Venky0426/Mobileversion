@@ -18,12 +18,16 @@
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
       "predictiveBackGestureEnabled": false,
+<<<<<<< HEAD
       "softwareKeyboardLayoutMode": "resize",
       "permissions": [
         "RECEIVE_BOOT_COMPLETED",
         "VIBRATE",
         "POST_NOTIFICATIONS"
       ]
+=======
+      "softwareKeyboardLayoutMode": "resize"
+>>>>>>> 47463a7a08d38f17ffd1b4b51c6b0edcb0c65697
     },
     "web": {
       "output": "single",
@@ -31,6 +35,7 @@
     },
     "plugins": [
       [
+<<<<<<< HEAD
         "expo-notifications",
         {
           "icon": "./assets/images/icon.png",
@@ -38,6 +43,8 @@
         }
       ],
       [
+=======
+>>>>>>> 47463a7a08d38f17ffd1b4b51c6b0edcb0c65697
         "expo-splash-screen",
         {
           "backgroundColor": "#208AEF",
@@ -46,8 +53,12 @@
             "imageWidth": 76
           }
         }
+<<<<<<< HEAD
       ],
       "expo-status-bar"
+=======
+      ]
+>>>>>>> 47463a7a08d38f17ffd1b4b51c6b0edcb0c65697
     ],
     "experiments": {
       "reactCompiler": true

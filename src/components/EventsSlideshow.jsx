@@ -1,5 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
+<<<<<<< HEAD
 import { Calendar, MapPin, ExternalLink, X, ChevronLeft, ChevronRight } from 'lucide-react';
+=======
+import { Calendar, MapPin, ExternalLink, X } from 'lucide-react';
+>>>>>>> 47463a7a08d38f17ffd1b4b51c6b0edcb0c65697
 
 const eventsData = [
   {
@@ -174,6 +178,7 @@ const EventsSlideshow = () => {
               </div>
             </div>
 
+<<<<<<< HEAD
             {/* Navigation Click Areas with Visible Cursors */}
             <div className="absolute inset-0 z-30 flex pointer-events-none top-16 bottom-20">
                <div 
@@ -194,6 +199,12 @@ const EventsSlideshow = () => {
                    <ChevronRight className="w-6 h-6" />
                  </div>
                </div>
+=======
+            {/* Navigation Click Areas */}
+            <div className="absolute inset-0 z-[5] flex">
+               <div className="w-1/3 h-full cursor-pointer" onClick={handlePrev}></div>
+               <div className="w-2/3 h-full cursor-pointer" onClick={handleNext}></div>
+>>>>>>> 47463a7a08d38f17ffd1b4b51c6b0edcb0c65697
             </div>
 
             {/* Content Area */}

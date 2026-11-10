@@ -59,9 +59,14 @@ const Login = () => {
     e.preventDefault();
     setMessage({ type: '', text: '' });
 
+<<<<<<< HEAD
     const cleanedEmail = email.trim().toLowerCase();
     const emailRegex = /^[a-zA-Z0-9._%+-]+@cambridge\.edu\.in$/i;
     if (!emailRegex.test(cleanedEmail)) {
+=======
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@cambridge\.edu\.in$/i;
+    if (!emailRegex.test(email)) {
+>>>>>>> 47463a7a08d38f17ffd1b4b51c6b0edcb0c65697
       setMessage({ 
         type: 'error', 
         text: 'Please use a valid Cambridge email (e.g., name@cambridge.edu.in)' 
@@ -70,17 +75,28 @@ const Login = () => {
     }
 
     try {
+<<<<<<< HEAD
       await signInWithEmailAndPassword(auth, cleanedEmail, password);
+=======
+      await signInWithEmailAndPassword(auth, email, password);
+>>>>>>> 47463a7a08d38f17ffd1b4b51c6b0edcb0c65697
       navigate('/home');
     } catch (error) {
       console.error(error);
       let errorMsg = 'Invalid email or password! Please make sure your credentials are correct, or sign up if you do not have an account.';
+<<<<<<< HEAD
       if (error.code === 'auth/invalid-credential' || error.code === 'auth/user-not-found') {
         errorMsg = 'Invalid email or password. If you do not have an account yet, please sign up first!';
       } else if (error.code === 'auth/wrong-password') {
         errorMsg = 'Incorrect password. Please try again.';
       } else if (error.code === 'auth/too-many-requests') {
         errorMsg = 'Too many failed login attempts. Please reset your password or try again later.';
+=======
+      if (error.code === 'auth/user-not-found') {
+        errorMsg = 'This email is not registered yet. Please sign up first!';
+      } else if (error.code === 'auth/wrong-password') {
+        errorMsg = 'Incorrect password. Please try again.';
+>>>>>>> 47463a7a08d38f17ffd1b4b51c6b0edcb0c65697
       } else if (error.message) {
         errorMsg = error.message;
       }

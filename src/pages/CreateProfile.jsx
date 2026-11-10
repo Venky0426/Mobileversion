@@ -72,21 +72,34 @@ const CreateProfile = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+<<<<<<< HEAD
     const cleanedEmail = email.trim().toLowerCase();
     const emailRegex = /^[a-zA-Z0-9._%+-]+@cambridge\.edu\.in$/;
     if (!emailRegex.test(cleanedEmail)) {
+=======
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@cambridge\.edu\.in$/;
+    if (!emailRegex.test(email)) {
+>>>>>>> 47463a7a08d38f17ffd1b4b51c6b0edcb0c65697
       alert('Please use a valid Cambridge email (e.g., name@cambridge.edu.in)');
       return;
     }
     try {
       let uid;
       try {
+<<<<<<< HEAD
         const userCredential = await createUserWithEmailAndPassword(auth, cleanedEmail, password);
+=======
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+>>>>>>> 47463a7a08d38f17ffd1b4b51c6b0edcb0c65697
         uid = userCredential.user.uid;
       } catch (authError) {
         if (authError.code === 'auth/email-already-in-use') {
           try {
+<<<<<<< HEAD
             const userCredential = await signInWithEmailAndPassword(auth, cleanedEmail, password);
+=======
+            const userCredential = await signInWithEmailAndPassword(auth, email, password);
+>>>>>>> 47463a7a08d38f17ffd1b4b51c6b0edcb0c65697
             uid = userCredential.user.uid;
           } catch (signInError) {
             alert('This email is already registered! Please enter the correct password for this account to complete profile setup, or use a different email.');
@@ -97,7 +110,11 @@ const CreateProfile = () => {
         }
       }
 
+<<<<<<< HEAD
       let imageUrl = `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(cleanedEmail)}`;
+=======
+      let imageUrl = `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(email)}`;
+>>>>>>> 47463a7a08d38f17ffd1b4b51c6b0edcb0c65697
       if (selectedFile) {
         try {
           const rawBase64 = await new Promise((resolve, reject) => {
@@ -115,7 +132,11 @@ const CreateProfile = () => {
       try {
         await addDoc(collection(db, 'profiles'), {
           uid,
+<<<<<<< HEAD
           email: cleanedEmail,
+=======
+          email,
+>>>>>>> 47463a7a08d38f17ffd1b4b51c6b0edcb0c65697
           fullName,
           college,
           bio,

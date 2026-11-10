@@ -58,14 +58,23 @@ export default function CreateProfileScreen() {
   };
 
   const handleSubmit = async () => {
+<<<<<<< HEAD
     const cleanedEmail = email.trim().toLowerCase();
     const emailRegex = /^[a-zA-Z0-9._%+-]+@cambridge\.edu\.in$/i;
     if (!emailRegex.test(cleanedEmail)) {
+=======
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@cambridge\.edu\.in$/i;
+    if (!emailRegex.test(email)) {
+>>>>>>> 47463a7a08d38f17ffd1b4b51c6b0edcb0c65697
       Alert.alert('Invalid Email', 'Please use a valid Cambridge email (e.g., name@cambridge.edu.in)');
       return;
     }
     
+<<<<<<< HEAD
     if (!fullName.trim() || !college.trim() || !password) {
+=======
+    if (!fullName || !college || !password) {
+>>>>>>> 47463a7a08d38f17ffd1b4b51c6b0edcb0c65697
       Alert.alert('Missing Info', 'Please fill in all required fields.');
       return;
     }
@@ -74,12 +83,20 @@ export default function CreateProfileScreen() {
     try {
       let uid;
       try {
+<<<<<<< HEAD
         const userCredential = await createUserWithEmailAndPassword(auth, cleanedEmail, password);
+=======
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+>>>>>>> 47463a7a08d38f17ffd1b4b51c6b0edcb0c65697
         uid = userCredential.user.uid;
       } catch (authError) {
         if (authError.code === 'auth/email-already-in-use') {
           try {
+<<<<<<< HEAD
             const userCredential = await signInWithEmailAndPassword(auth, cleanedEmail, password);
+=======
+            const userCredential = await signInWithEmailAndPassword(auth, email, password);
+>>>>>>> 47463a7a08d38f17ffd1b4b51c6b0edcb0c65697
             uid = userCredential.user.uid;
           } catch (signInError) {
             Alert.alert('Error', 'This email is already registered! Please enter the correct password for this account to complete profile setup, or use a different email.');
@@ -91,7 +108,11 @@ export default function CreateProfileScreen() {
         }
       }
 
+<<<<<<< HEAD
       let imageUrl = `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(cleanedEmail)}`;
+=======
+      let imageUrl = `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(email)}`;
+>>>>>>> 47463a7a08d38f17ffd1b4b51c6b0edcb0c65697
       if (base64Image) {
         imageUrl = base64Image;
       }
@@ -99,7 +120,11 @@ export default function CreateProfileScreen() {
       try {
         await addDoc(collection(db, 'profiles'), {
           uid,
+<<<<<<< HEAD
           email: cleanedEmail,
+=======
+          email,
+>>>>>>> 47463a7a08d38f17ffd1b4b51c6b0edcb0c65697
           fullName,
           college,
           bio,

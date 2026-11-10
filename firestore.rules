@@ -11,9 +11,14 @@ service cloud.firestore {
     // Messages rules
     match /messages/{messageId} {
       allow read: if request.auth != null;
+<<<<<<< HEAD
       allow create: if request.auth != null && (request.resource.data.senderId == request.auth.uid || request.resource.data.senderId == 'system');
       allow update: if request.auth != null; // Allows updating read status
       allow delete: if false; // Messages are immutable for deletion
+=======
+      allow create: if request.auth != null && request.resource.data.senderId == request.auth.uid;
+      allow update, delete: if false; // Messages are immutable for security
+>>>>>>> 47463a7a08d38f17ffd1b4b51c6b0edcb0c65697
     }
 
     // Projects rules
@@ -24,21 +29,34 @@ service cloud.firestore {
       allow delete: if request.auth != null && resource.data.uid == request.auth.uid;
     }
 
+<<<<<<< HEAD
     // Posts rules - Public feed reading, authenticated creation and ownership edit/delete
     match /posts/{postId} {
       allow read: if true;
+=======
+    // Posts rules
+    match /posts/{postId} {
+      allow read: if request.auth != null;
+>>>>>>> 47463a7a08d38f17ffd1b4b51c6b0edcb0c65697
       allow create: if request.auth != null && request.resource.data.uid == request.auth.uid;
       allow update: if request.auth != null;
       allow delete: if request.auth != null && resource.data.uid == request.auth.uid;
     }
 
+<<<<<<< HEAD
     // Stories rules - Public stories reading, authenticated creation and ownership edit/delete
     match /stories/{storyId} {
       allow read: if true;
+=======
+    // Stories rules
+    match /stories/{storyId} {
+      allow read: if request.auth != null;
+>>>>>>> 47463a7a08d38f17ffd1b4b51c6b0edcb0c65697
       allow create: if request.auth != null && request.resource.data.uid == request.auth.uid;
       allow update: if request.auth != null;
       allow delete: if request.auth != null && resource.data.uid == request.auth.uid;
     }
+<<<<<<< HEAD
 
     // Events rules - Public discovery allowed
     match /events/{eventId} {
@@ -67,5 +85,7 @@ service cloud.firestore {
     match /users/{userId}/notificationSettings/{docId} {
       allow read, write: if request.auth != null && request.auth.uid == userId;
     }
+=======
+>>>>>>> 47463a7a08d38f17ffd1b4b51c6b0edcb0c65697
   }
 }

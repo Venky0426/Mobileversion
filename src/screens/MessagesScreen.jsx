@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { useState, useEffect, useRef, useCallback } from 'react';
 import {
   View,
@@ -128,11 +129,58 @@ export default function MessagesScreen({ route, navigation }) {
   const [newCommCategory, setNewCommCategory] = useState('Web Dev');
   const [creatingComm, setCreatingComm] = useState(false);
 
+=======
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { View, Text, TouchableOpacity, Image, ScrollView, TextInput, KeyboardAvoidingView, Platform, ActivityIndicator, Modal, BackHandler } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
+import { Search, Phone, Video, MoreVertical, Paperclip, Smile, Send, Code, Hash, ChevronDown, X, Gift, ArrowLeft, Bell } from 'lucide-react-native';
+import clsx from 'clsx';
+import { auth, db } from '../firebase';
+import { onAuthStateChanged } from 'firebase/auth';
+import { collection, query, where, onSnapshot, getDocs } from 'firebase/firestore';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { io } from 'socket.io-client';
+
+// Use the machine's local network IP address for physical devices
+// 10.0.2.2 for Android Emulator, localhost for iOS simulator, or specific IP for physical devices
+let SOCKET_URL = 'http://10.125.91.167:3001';
+
+const socket = io(SOCKET_URL, {
+  reconnectionAttempts: 5,
+  timeout: 10000,
+});
+
+socket.on('connect', () => console.log('Socket connected:', socket.id));
+socket.on('connect_error', (err) => console.log('Socket connect error:', err.message));
+socket.on('disconnect', () => console.log('Socket disconnected'));
+
+
+const COMMUNITIES_LIST = [
+  { id: 'mca-community', name: 'MCA Community 2025-27', members: '116 Members', online: '10 Online', badge: 5, img: 'https://api.dicebear.com/7.x/shapes/png?seed=mca' },
+  { id: 'web-dev-community', name: 'Web Dev Community', members: '176 Members', online: '30 Online', badge: 8, img: 'https://api.dicebear.com/7.x/shapes/png?seed=web' },
+  { id: 'ui-ux-community', name: 'UI/UX Community', members: '76 Members', online: '20 Online', badge: null, img: 'https://api.dicebear.com/7.x/shapes/png?seed=uiux' },
+  { id: 'ai-ml-community', name: 'AI &ML Community', members: '176 Members', online: '30 Online', badge: 10, img: 'https://api.dicebear.com/7.x/shapes/png?seed=aiml' },
+  { id: 'data-science', name: 'Data Science Hub', members: '89 Members', online: '15 Online', badge: 2, img: 'https://api.dicebear.com/7.x/shapes/png?seed=data' },
+  { id: 'competitive-prog', name: 'Competitive Programming', members: '245 Members', online: '50 Online', badge: 12, img: 'https://api.dicebear.com/7.x/shapes/png?seed=cp' },
+  { id: 'open-source', name: 'Open Source Contributors', members: '432 Members', online: '120 Online', badge: null, img: 'https://api.dicebear.com/7.x/shapes/png?seed=os' }
+];
+
+// Direct messages are dynamically loaded from profiles now
+
+export default function MessagesScreen() {
+  const [currentUser, setCurrentUser] = useState(null);
+  const [userProfile, setUserProfile] = useState(null);
+  const [activeCommunity, setActiveCommunity] = useState(COMMUNITIES_LIST[1]);
+  const [viewMode, setViewMode] = useState('list'); // 'list' or 'chat'
+  const [showAllCommunities, setShowAllCommunities] = useState(false);
+  
+>>>>>>> 47463a7a08d38f17ffd1b4b51c6b0edcb0c65697
   const [messages, setMessages] = useState([]);
   const [inputText, setInputText] = useState('');
   const [codeSnippet, setCodeSnippet] = useState('');
   const [showCodeInput, setShowCodeInput] = useState(false);
   const [loading, setLoading] = useState(true);
+<<<<<<< HEAD
   
   const [profiles, setProfiles] = useState([]);
   const [connections, setConnections] = useState([]);
@@ -294,6 +342,27 @@ export default function MessagesScreen({ route, navigation }) {
   ];
 
   // Auth state listener
+=======
+  const [socketError, setSocketError] = useState(null);
+  
+  const [profiles, setProfiles] = useState([]);
+  
+  const scrollViewRef = useRef();
+
+  const isUserOnline = (profile) => {
+    if (!profile.lastActive) return false;
+    let timeMs = 0;
+    if (profile.lastActive.toDate) {
+      timeMs = profile.lastActive.toDate().getTime();
+    } else if (profile.lastActive.seconds) {
+      timeMs = profile.lastActive.seconds * 1000;
+    } else {
+      timeMs = new Date(profile.lastActive).getTime();
+    }
+    return Date.now() - timeMs < 5 * 60 * 1000;
+  };
+
+>>>>>>> 47463a7a08d38f17ffd1b4b51c6b0edcb0c65697
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
@@ -317,6 +386,7 @@ export default function MessagesScreen({ route, navigation }) {
     return () => unsubscribe();
   }, []);
 
+<<<<<<< HEAD
   // Listen to Firestore communities in real-time with graceful fallback
   useEffect(() => {
     const q = collection(db, 'communities');
@@ -391,6 +461,8 @@ export default function MessagesScreen({ route, navigation }) {
   }, [route?.params?.communityId, route?.params?.communityName, customCommunities.length, connections.length]);
 
   // Listen to profiles for direct messaging
+=======
+>>>>>>> 47463a7a08d38f17ffd1b4b51c6b0edcb0c65697
   useEffect(() => {
     const q = collection(db, 'profiles');
     const unsubscribe = onSnapshot(q, (snapshot) => {
@@ -408,6 +480,7 @@ export default function MessagesScreen({ route, navigation }) {
     return () => unsubscribe();
   }, []);
 
+<<<<<<< HEAD
   // Listen to Real-Time Messages in the active community / DM using Firebase Firestore
   useEffect(() => {
     const q = query(
@@ -461,6 +534,64 @@ export default function MessagesScreen({ route, navigation }) {
         setActiveConversation(null);
       }
 
+=======
+  useEffect(() => {
+    setLoading(true);
+    
+    // Join the community channel
+    if (socket.connected) {
+      socket.emit('join_community', activeCommunity.id);
+    } else {
+      socket.once('connect', () => {
+        socket.emit('join_community', activeCommunity.id);
+      });
+    }
+
+    // Listen for previous messages
+    const handlePrevMessages = (msgs) => {
+      const sortedMsgs = msgs.sort((a, b) => (a.localTime || 0) - (b.localTime || 0));
+      setMessages(sortedMsgs);
+      setLoading(false);
+      setSocketError(null);
+    };
+
+    // Listen for new messages
+    const handleNewMessage = (msg) => {
+      setMessages((prevMsgs) => {
+        if (prevMsgs.some(m => m.id === msg.id)) return prevMsgs;
+        return [...prevMsgs, msg].sort((a, b) => (a.localTime || 0) - (b.localTime || 0));
+      });
+    };
+    
+    const handleConnectError = (err) => {
+      setSocketError(`Connection failed: ${err.message}. Ensure backend is running.`);
+      setLoading(false); // Stop buffering so user sees error
+    };
+
+    socket.on('previous_messages', handlePrevMessages);
+    socket.on('receive_message', handleNewMessage);
+    socket.on('connect_error', handleConnectError);
+
+    // Timeout fallback if it takes too long
+    const timeout = setTimeout(() => {
+      if (loading && !socket.connected) {
+        setSocketError("Connection timed out. Connecting to " + SOCKET_URL);
+        setLoading(false);
+      }
+    }, 5000);
+
+    return () => {
+      clearTimeout(timeout);
+      socket.emit('leave_community', activeCommunity.id);
+      socket.off('previous_messages', handlePrevMessages);
+      socket.off('receive_message', handleNewMessage);
+      socket.off('connect_error', handleConnectError);
+    };
+  }, [activeCommunity]);
+
+  useFocusEffect(
+    useCallback(() => {
+>>>>>>> 47463a7a08d38f17ffd1b4b51c6b0edcb0c65697
       const onBackPress = () => {
         if (viewMode === 'chat') {
           setViewMode('list');
@@ -471,6 +602,7 @@ export default function MessagesScreen({ route, navigation }) {
 
       const subscription = BackHandler.addEventListener('hardwareBackPress', onBackPress);
 
+<<<<<<< HEAD
       return () => {
         setActiveConversation(null);
         subscription.remove();
@@ -521,6 +653,12 @@ export default function MessagesScreen({ route, navigation }) {
     );
   };
 
+=======
+      return () => subscription.remove();
+    }, [viewMode])
+  );
+
+>>>>>>> 47463a7a08d38f17ffd1b4b51c6b0edcb0c65697
   const handleSendMessage = async () => {
     if (!inputText.trim() && !codeSnippet.trim()) return;
 
@@ -531,16 +669,23 @@ export default function MessagesScreen({ route, navigation }) {
 
     const newMessage = {
       communityId: activeCommunity.id,
+<<<<<<< HEAD
       communityName: activeCommunity.name,
+=======
+>>>>>>> 47463a7a08d38f17ffd1b4b51c6b0edcb0c65697
       senderId: currentUser.uid,
       senderName,
       senderAvatar,
       text: inputText.trim(),
       codeSnippet: codeSnippet.trim() || null,
+<<<<<<< HEAD
       recipientId: activeCommunity.isDM ? activeCommunity.recipientUid : null,
       read: false,
       timestamp: serverTimestamp(),
       localTime: Date.now()
+=======
+      // No serverTimestamp() here since it's socket-based
+>>>>>>> 47463a7a08d38f17ffd1b4b51c6b0edcb0c65697
     };
 
     setInputText('');
@@ -548,6 +693,7 @@ export default function MessagesScreen({ route, navigation }) {
     setShowCodeInput(false);
 
     try {
+<<<<<<< HEAD
       await addDoc(collection(db, 'messages'), newMessage);
     } catch (err) {
       console.error("Error writing message to Firestore: ", err);
@@ -616,6 +762,11 @@ export default function MessagesScreen({ route, navigation }) {
       Alert.alert('Creation Failed', 'Could not create community. Please try again.');
     } finally {
       setCreatingComm(false);
+=======
+      socket.emit('send_message', newMessage);
+    } catch (err) {
+      console.error(err);
+>>>>>>> 47463a7a08d38f17ffd1b4b51c6b0edcb0c65697
     }
   };
 
@@ -623,8 +774,11 @@ export default function MessagesScreen({ route, navigation }) {
     let date = null;
     if (msg.timestamp?.toDate) {
       date = msg.timestamp.toDate();
+<<<<<<< HEAD
     } else if (msg.timestamp?.seconds) {
       date = new Date(msg.timestamp.seconds * 1000);
+=======
+>>>>>>> 47463a7a08d38f17ffd1b4b51c6b0edcb0c65697
     } else if (msg.localTime) {
       date = new Date(msg.localTime);
     }
@@ -632,6 +786,7 @@ export default function MessagesScreen({ route, navigation }) {
   };
 
   if (viewMode === 'list') {
+<<<<<<< HEAD
     const popularCommunities = allCommunities.filter(c => POPULAR_IDS.includes(c.id)).concat(
       allCommunities.filter(c => !POPULAR_IDS.includes(c.id)).slice(0, 2)
     ).slice(0, 5);
@@ -1052,6 +1207,120 @@ export default function MessagesScreen({ route, navigation }) {
             </View>
           </KeyboardAvoidingView>
         </Modal>
+=======
+    return (
+      <SafeAreaView className="flex-1 bg-white" edges={['top']}>
+        <View className="px-4 pt-4 pb-2 mt-4 flex-row justify-between items-center">
+          <Text className="text-[28px] font-bold text-gray-900 tracking-tight">Messages</Text>
+          <TouchableOpacity className="relative mr-2 mt-1">
+            <View className="w-6 h-6 items-center justify-center">
+              <Bell size={24} color="#111827" />
+            </View>
+            <View className="absolute -top-1 -right-1 bg-red-500 rounded-full w-4 h-4 items-center justify-center">
+              <Text className="text-white text-[10px] font-bold">3</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+        <View className="px-4 mb-4 mt-2">
+          <View className="flex-row items-center bg-gray-100 rounded-xl px-3 py-2.5">
+            <Search size={20} color="#9ca3af" />
+            <TextInput 
+              placeholder="Search Messages" 
+              placeholderTextColor="#9ca3af"
+              className="flex-1 ml-2 text-[15px] text-gray-900" 
+            />
+          </View>
+        </View>
+        
+        <ScrollView className="flex-1 px-4" showsVerticalScrollIndicator={false}>
+          <Text className="text-[12px] text-gray-600 mb-4 pl-1">COMMUNITIES</Text>
+          {COMMUNITIES_LIST.slice(0, showAllCommunities ? undefined : 4).map((community, index) => {
+            return (
+              <TouchableOpacity 
+                key={community.id}
+                className="flex-row items-center py-2 px-1 mb-3"
+                onPress={() => {
+                  setActiveCommunity(community);
+                  setViewMode('chat');
+                }}
+              >
+                <Image 
+                  source={{ uri: community.img }} 
+                  className="w-[46px] h-[46px] rounded-xl bg-gray-100 mr-4"
+                  resizeMode="cover"
+                />
+                <View className="flex-1 justify-center">
+                  <Text className="text-[16px] font-semibold text-gray-900 mb-0.5">
+                    {community.name}
+                  </Text>
+                  <Text className="text-[13px] text-gray-500">
+                    {community.members} • {community.online}
+                  </Text>
+                </View>
+                {community.badge && (
+                  <View className="w-6 h-6 rounded-full bg-[#0a66c2] items-center justify-center">
+                    <Text className="text-white text-xs font-bold">{community.badge}</Text>
+                  </View>
+                )}
+              </TouchableOpacity>
+            );
+          })}
+          
+          <TouchableOpacity 
+            className="flex-row justify-center items-center py-2 mb-4"
+            onPress={() => setShowAllCommunities(!showAllCommunities)}
+          >
+            <Text className="text-[13px] font-medium text-gray-900 mr-1">{showAllCommunities ? "Less" : "More"}</Text>
+            <ChevronDown size={16} color="#111827" style={{ transform: [{ rotate: showAllCommunities ? '180deg' : '0deg' }] }} />
+          </TouchableOpacity>
+          
+          <View className="h-[1px] bg-gray-200 mb-4" />
+          
+          <Text className="text-[12px] text-gray-600 mb-4 pl-1">
+            DIRECT MESSAGES
+          </Text>
+          
+          {profiles.filter(p => p.uid !== currentUser?.uid).map((profile, idx) => {
+            const avatarUrl = profile.imageUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(profile.fullName || 'User')}&background=random&color=fff&size=128`;
+            return (
+              <TouchableOpacity 
+                key={`${profile.uid}_${idx}`} 
+                className="flex-row items-center py-2 px-1 mb-3"
+                onPress={() => {
+                  if (!currentUser) return;
+                  const dmId = [currentUser.uid, profile.uid].sort().join('_');
+                  setActiveCommunity({
+                    id: `dm_${dmId}`,
+                    name: profile.fullName || 'Anonymous',
+                    members: 'Direct Message',
+                    online: isUserOnline(profile) ? 'Online' : 'Offline',
+                    img: avatarUrl,
+                    isDM: true
+                  });
+                  setViewMode('chat');
+                }}
+              >
+                <View className="relative mr-4">
+                  <Image source={{uri: avatarUrl}} className="w-[48px] h-[48px] rounded-full bg-gray-100" />
+                  {isUserOnline(profile) && (
+                    <View className="absolute bottom-0 right-0 w-3.5 h-3.5 bg-[#10b981] rounded-full border-2 border-white" />
+                  )}
+                </View>
+                <View className="flex-1 justify-center">
+                  <View className="flex-row justify-between items-center mb-0.5">
+                    <Text className="text-[16px] font-semibold text-gray-900">{profile.fullName || 'Anonymous'}</Text>
+                    <Text className="text-[12px] font-medium text-gray-500">
+                      {profile.lastActive ? new Date(profile.lastActive.toDate ? profile.lastActive.toDate() : profile.lastActive).toLocaleDateString() : 'New'}
+                    </Text>
+                  </View>
+                  <Text className="text-[14px] text-gray-500" numberOfLines={1}>Hey! Let's connect.</Text>
+                </View>
+              </TouchableOpacity>
+            )
+          })}
+          <View className="h-8" />
+        </ScrollView>
+>>>>>>> 47463a7a08d38f17ffd1b4b51c6b0edcb0c65697
       </SafeAreaView>
     );
   }
@@ -1076,6 +1345,7 @@ export default function MessagesScreen({ route, navigation }) {
         </View>
         <View className="flex-row items-center bg-blue-50 px-4 py-2 rounded-full border border-blue-100 max-w-[65%]">
           <Hash size={16} color="#0a66c2" style={{ marginRight: 6 }} />
+<<<<<<< HEAD
           <Text className="text-gray-900 font-bold text-sm tracking-wide" numberOfLines={1}>
             {activeCommunity.name}
           </Text>
@@ -1289,11 +1559,145 @@ export default function MessagesScreen({ route, navigation }) {
         >
           <Send size={16} color={(inputText.trim() || codeSnippet.trim()) ? "white" : "#9ca3af"} />
         </TouchableOpacity>
+=======
+          <Text className="font-bold text-[#0a66c2] text-sm" numberOfLines={1}>{activeCommunity.name}</Text>
+        </View>
+      </View>
+
+      {/* Messages */}
+      <ScrollView 
+        className="flex-1 bg-gray-50 px-4 pt-4"
+        ref={scrollViewRef}
+        keyboardShouldPersistTaps="handled"
+        onContentSizeChange={() => scrollViewRef.current?.scrollToEnd({ animated: true })}
+      >
+        {loading ? (
+          <View className="flex-1 items-center justify-center py-20">
+            <ActivityIndicator size="large" color="#0a66c2" />
+            <Text className="mt-4 text-gray-500">Connecting to real-time chat...</Text>
+          </View>
+        ) : socketError ? (
+          <View className="flex-1 items-center justify-center py-20">
+            <Text className="text-red-500 text-center px-4 font-medium mb-2">{socketError}</Text>
+            <TouchableOpacity 
+              className="bg-blue-100 px-4 py-2 rounded-full mt-2"
+              onPress={() => {
+                setLoading(true);
+                setSocketError(null);
+                socket.connect();
+              }}
+            >
+              <Text className="text-blue-700 font-bold">Retry Connection</Text>
+            </TouchableOpacity>
+          </View>
+        ) : messages.length > 0 ? (
+          messages.map((msg) => {
+            const isMe = msg.senderId === currentUser?.uid;
+            return (
+              <View key={msg.id} className={clsx("flex-row mb-4", isMe && "justify-end")}>
+                {!isMe && (
+                  <Image source={{ uri: msg.senderAvatar }} className="w-8 h-8 rounded-full mr-2" />
+                )}
+                <View className={clsx("max-w-[80%]", isMe && "items-end")}>
+                  {!isMe && (
+                    <View className="flex-row items-baseline mb-1">
+                      <Text className="font-semibold text-gray-900 text-xs mr-2">{msg.senderName}</Text>
+                      <Text className="text-[10px] text-gray-400">{formatTime(msg)}</Text>
+                    </View>
+                  )}
+                  {msg.text ? (
+                    <View className={clsx(
+                      "p-3 rounded-2xl shadow-sm border",
+                      isMe 
+                        ? "bg-[#0a66c2] border-blue-600 rounded-tr-none" 
+                        : "bg-white border-gray-200 rounded-tl-none"
+                    )}>
+                      <Text className={clsx(isMe ? "text-white" : "text-gray-800")}>{msg.text}</Text>
+                    </View>
+                  ) : null}
+                  {msg.codeSnippet ? (
+                    <View className="bg-[#1e1e1e] p-3 rounded-xl mt-1">
+                      <Text className="text-green-400 font-mono text-xs">{msg.codeSnippet}</Text>
+                    </View>
+                  ) : null}
+                  {isMe && (
+                    <Text className="text-[10px] text-gray-400 mt-1">{formatTime(msg)}</Text>
+                  )}
+                </View>
+              </View>
+            );
+          })
+        ) : (
+          <View className="items-center justify-center py-20">
+            <Hash size={40} color="#d1d5db" />
+            <Text className="font-semibold text-gray-500 mt-2">No messages in #{activeCommunity.name}</Text>
+          </View>
+        )}
+      </ScrollView>
+
+      {/* Instagram-Style Composer */}
+      <View className="border-t border-gray-200 bg-white pb-2 pt-3 px-4">
+        {showCodeInput && (
+          <View className="mb-2 relative">
+            <TextInput
+              multiline
+              numberOfLines={4}
+              placeholder="Paste code snippet..."
+              className="bg-[#1e1e1e] text-green-400 p-3 rounded-lg font-mono text-xs"
+              style={{ textAlignVertical: 'top' }}
+              value={codeSnippet}
+              onChangeText={setCodeSnippet}
+            />
+            <TouchableOpacity 
+              className="absolute top-2 right-2 bg-red-500 px-2 py-1 rounded"
+              onPress={() => setShowCodeInput(false)}
+            >
+              <Text className="text-white text-xs">Remove</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+        {/* Emojis */}
+        <View className="flex-row justify-between px-2 mb-3">
+          {['❤️', '🙌', '🔥', '👏', '😢', '😍', '😮', '😂'].map(emoji => (
+            <TouchableOpacity key={emoji} onPress={() => setInputText(prev => prev + emoji)}>
+              <Text className="text-2xl">{emoji}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+        {/* Input Row */}
+        <View className="flex-row items-center">
+          <Image source={{ uri: userProfile?.imageUrl || `https://api.dicebear.com/7.x/avataaars/png?seed=${currentUser?.uid}` }} className="w-10 h-10 rounded-full mr-3 bg-gray-100 border border-gray-200" />
+          <View className="flex-1 flex-row items-center border border-gray-300 rounded-full pl-4 pr-1 py-1 bg-gray-50">
+            <TextInput 
+              className="flex-1 py-1 text-sm max-h-24 min-h-[32px]"
+              placeholder={`Message #${activeCommunity.name}...`}
+              multiline
+              value={inputText}
+              onChangeText={setInputText}
+            />
+            <TouchableOpacity className="border border-gray-400 rounded px-1.5 py-0.5 mx-2 bg-white">
+              <Text className="text-[10px] font-bold text-gray-600">GIF</Text>
+            </TouchableOpacity>
+            {inputText.trim() || codeSnippet.trim() ? (
+              <TouchableOpacity onPress={handleSendMessage} className="p-1 mx-1">
+                <Send size={18} color="#0a66c2" />
+              </TouchableOpacity>
+            ) : null}
+          </View>
+          <TouchableOpacity onPress={() => setShowCodeInput(!showCodeInput)} className="ml-3 p-1">
+            <Code size={24} color={showCodeInput ? "#0a66c2" : "#4b5563"} />
+          </TouchableOpacity>
+          <TouchableOpacity className="ml-2 p-1">
+            <Gift size={24} color="#4b5563" />
+          </TouchableOpacity>
+        </View>
+>>>>>>> 47463a7a08d38f17ffd1b4b51c6b0edcb0c65697
       </View>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
+<<<<<<< HEAD
 
 // ─── Styles for redesigned list view & modal ──────────────────────────────────
 const PRIMARY = '#0a66c2';
@@ -1678,3 +2082,5 @@ const msgStyles = StyleSheet.create({
     fontWeight: '800',
   },
 });
+=======
+>>>>>>> 47463a7a08d38f17ffd1b4b51c6b0edcb0c65697

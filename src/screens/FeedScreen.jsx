@@ -3,7 +3,11 @@ import {
   View, Text, Image, TouchableOpacity, TextInput, ScrollView, Modal, 
   KeyboardAvoidingView, Platform, Alert, Dimensions, Share, RefreshControl 
 } from 'react-native';
+<<<<<<< HEAD
 import { Heart, MessageCircle, Share2, MoreHorizontal, UserPlus, X, Send, Plus, Image as ImageIcon, Gift, Rocket, GraduationCap, Trophy, Briefcase, ChevronLeft, ChevronRight } from 'lucide-react-native';
+=======
+import { Heart, MessageCircle, Share2, MoreHorizontal, UserPlus, X, Send, Plus, Image as ImageIcon, Gift, Rocket, GraduationCap, Trophy, Briefcase } from 'lucide-react-native';
+>>>>>>> 47463a7a08d38f17ffd1b4b51c6b0edcb0c65697
 import { auth, db } from '../firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import { collection, query, where, getDocs, onSnapshot, orderBy, addDoc, updateDoc, doc, deleteDoc } from 'firebase/firestore';
@@ -37,6 +41,7 @@ const FeedScreen = ({ navigation }) => {
   const [commentInputs, setCommentInputs] = useState({});
   
   const [refreshing, setRefreshing] = useState(false);
+<<<<<<< HEAD
   const [selectedStoryIndex, setSelectedStoryIndex] = useState(null);
   const [storyProgress, setStoryProgress] = useState(0);
 
@@ -81,6 +86,8 @@ const FeedScreen = ({ navigation }) => {
 
     return () => clearInterval(timer);
   }, [selectedStoryIndex, stories.length]);
+=======
+>>>>>>> 47463a7a08d38f17ffd1b4b51c6b0edcb0c65697
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
@@ -144,7 +151,12 @@ const FeedScreen = ({ navigation }) => {
       const fetchedPosts = snapshot.docs.map(doc => ({ fbId: doc.id, ...doc.data() }));
       setPosts(fetchedPosts.length > 0 ? fetchedPosts : defaultPosts);
     }, (error) => {
+<<<<<<< HEAD
       console.warn("Firestore access note for posts (using default posts):", error?.message);
+=======
+      console.warn("Firestore access denied for posts. Falling back to static data. Please update Firebase rules.", error);
+      Alert.alert("Firestore Error (Posts)", error.message + "\n\nDid you publish the updated Security Rules in your Firebase Console?");
+>>>>>>> 47463a7a08d38f17ffd1b4b51c6b0edcb0c65697
       setPosts(defaultPosts);
     });
     return () => unsubscribePosts();
@@ -157,7 +169,12 @@ const FeedScreen = ({ navigation }) => {
       const fetchedStories = snapshot.docs.map(doc => ({ fbId: doc.id, ...doc.data() }));
       setStories(fetchedStories.length > 0 ? fetchedStories : defaultStories);
     }, (error) => {
+<<<<<<< HEAD
       console.warn("Firestore access note for stories (using default stories):", error?.message);
+=======
+      console.warn("Firestore access denied for stories. Falling back to static data. Please update Firebase rules.", error);
+      Alert.alert("Firestore Error (Stories)", error.message + "\n\nDid you publish the updated Security Rules in your Firebase Console?");
+>>>>>>> 47463a7a08d38f17ffd1b4b51c6b0edcb0c65697
       setStories(defaultStories);
     });
     return () => unsubscribeStories();
@@ -273,16 +290,21 @@ const FeedScreen = ({ navigation }) => {
   };
 
   const handleCreateStory = async () => {
+<<<<<<< HEAD
     if (!newStoryText.trim() && !newStoryImage) {
       Alert.alert("Content Required", "Please enter some text or select an image for your story.");
       return;
     }
+=======
+    if (!newStoryName.trim() || (!newStoryText.trim() && !newStoryImage)) return;
+>>>>>>> 47463a7a08d38f17ffd1b4b51c6b0edcb0c65697
     const user = auth.currentUser;
     if (!user) {
       Alert.alert("Error", "You must be logged in to add a story.");
       return;
     }
 
+<<<<<<< HEAD
     const authorName = newStoryName.trim() || currentUserName || user.displayName || user.email?.split('@')[0] || 'User';
     const authorAvatar = currentUserAvatar || `https://api.dicebear.com/7.x/avataaars/png?seed=${encodeURIComponent(user.uid)}`;
 
@@ -295,6 +317,16 @@ const FeedScreen = ({ navigation }) => {
       content: newStoryImage || newStoryText.trim(),
       textContent: newStoryImage ? newStoryText.trim() : null,
       createdAt: Date.now()
+=======
+    const newStory = {
+      id: Date.now(),
+      uid: user.uid,
+      name: newStoryName.trim(),
+      seed: currentUserAvatar,
+      type: newStoryImage ? 'image' : 'text',
+      content: newStoryImage || newStoryText.trim(),
+      textContent: newStoryImage ? newStoryText.trim() : null
+>>>>>>> 47463a7a08d38f17ffd1b4b51c6b0edcb0c65697
     };
 
     try {
@@ -387,6 +419,7 @@ const FeedScreen = ({ navigation }) => {
           </ScrollView>
         </View>
 
+<<<<<<< HEAD
         {/* Stories Carousel */}
         <View className="bg-white py-3 border-b border-gray-200 mb-2 shadow-sm">
           <ScrollView 
@@ -440,6 +473,8 @@ const FeedScreen = ({ navigation }) => {
           </ScrollView>
         </View>
 
+=======
+>>>>>>> 47463a7a08d38f17ffd1b4b51c6b0edcb0c65697
         {/* Post List */}
         {posts.length === 0 ? (
           <View className="p-8 items-center justify-center">
@@ -530,6 +565,7 @@ const FeedScreen = ({ navigation }) => {
               <Text className="text-[14px] font-bold text-gray-900 px-4 mb-3">Recommended Communities</Text>
               <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 16 }}>
                 {[
+<<<<<<< HEAD
                   { id: 'ai-ml-community', name: 'AI & ML Community', members: '1.2K members', img: 'https://api.dicebear.com/7.x/shapes/png?seed=aiml' },
                   { id: 'web-dev-community', name: 'Web Dev Community', members: '2.5K members', img: 'https://api.dicebear.com/7.x/shapes/png?seed=web' },
                   { id: 'ui-ux-community', name: 'UI/UX Community', members: '800 members', img: 'https://api.dicebear.com/7.x/shapes/png?seed=uiux' }
@@ -552,6 +588,23 @@ const FeedScreen = ({ navigation }) => {
                       <Text className="text-white text-[11px] font-bold">Join</Text>
                     </View>
                   </TouchableOpacity>
+=======
+                  { name: 'AIML Community', members: '1.2K members', img: 'https://api.dicebear.com/7.x/shapes/png?seed=aiml' },
+                  { name: 'Web Dev Community', members: '2.5K members', img: 'https://api.dicebear.com/7.x/shapes/png?seed=web' },
+                  { name: 'UI/UX Community', members: '800 members', img: 'https://api.dicebear.com/7.x/shapes/png?seed=uiux' }
+                ].map((comm, idx) => (
+                  <View key={idx} className="bg-white border border-gray-200 rounded-xl p-3 mr-3 w-[140px] items-center shadow-sm">
+                    <Image source={{ uri: comm.img }} className="w-12 h-12 rounded-lg bg-gray-100 mb-2" />
+                    <Text className="text-gray-900 font-bold text-[13px] text-center mb-0.5" numberOfLines={1}>{comm.name}</Text>
+                    <Text className="text-gray-500 text-[11px] text-center mb-3">{comm.members}</Text>
+                    <TouchableOpacity 
+                      className="bg-[#0a66c2] px-6 py-1.5 rounded-full w-full items-center"
+                      onPress={() => navigation.navigate('Community', { communityName: comm.name })}
+                    >
+                      <Text className="text-white text-[11px] font-bold">Join</Text>
+                    </TouchableOpacity>
+                  </View>
+>>>>>>> 47463a7a08d38f17ffd1b4b51c6b0edcb0c65697
                 ))}
               </ScrollView>
             </View>
@@ -726,7 +779,11 @@ const FeedScreen = ({ navigation }) => {
                 onPress={handleCreateStory}
                 className={`px-8 py-3 rounded-full ${newStoryName.trim() && (newStoryText.trim() || newStoryImage) ? 'bg-[#0a66c2]' : 'bg-gray-300'}`}
               >
+<<<<<<< HEAD
                 <Text className={`font-bold ${newStoryName.trim() && (newStoryText.trim() || newStoryImage) ? 'text-white' : 'text-gray-500'}`}>Add to Story</Text>
+=======
+                <Text className={`font-bold ${newStoryName.trim() && newStoryContent ? 'text-white' : 'text-gray-500'}`}>Add to Story</Text>
+>>>>>>> 47463a7a08d38f17ffd1b4b51c6b0edcb0c65697
               </TouchableOpacity>
             </View>
           </View>
@@ -734,6 +791,7 @@ const FeedScreen = ({ navigation }) => {
       </Modal>
 
       {/* Story Viewer Modal */}
+<<<<<<< HEAD
       {selectedStoryIndex !== null && stories[selectedStoryIndex] && (
         <Modal visible={selectedStoryIndex !== null} animationType="fade" transparent={true}>
           <View className="flex-1 bg-black">
@@ -816,10 +874,29 @@ const FeedScreen = ({ navigation }) => {
                       <Text className="text-white text-base font-semibold text-center">
                         {stories[selectedStoryIndex].textContent}
                       </Text>
+=======
+      {selectedStory && (
+        <Modal visible={!!selectedStory} animationType="fade" transparent={true}>
+          <View className="flex-1 bg-black/95">
+            <TouchableOpacity 
+              className="absolute top-12 right-6 z-50 p-2"
+              onPress={() => setSelectedStory(null)}
+            >
+              <X size={32} color="white" />
+            </TouchableOpacity>
+            <View className="flex-1 items-center justify-center p-4 w-full">
+              {selectedStory.type === 'image' ? (
+                <View className="w-full h-3/4 rounded-2xl overflow-hidden relative bg-black/50">
+                  <Image source={{ uri: selectedStory.content }} className="w-full h-full" resizeMode="contain" />
+                  {selectedStory.textContent ? (
+                    <View className="absolute bottom-0 w-full bg-black/60 p-4">
+                      <Text className="text-white text-lg font-semibold text-center">{selectedStory.textContent}</Text>
+>>>>>>> 47463a7a08d38f17ffd1b4b51c6b0edcb0c65697
                     </View>
                   ) : null}
                 </View>
               ) : (
+<<<<<<< HEAD
                 <View className="w-full h-full bg-[#1e293b] items-center justify-center p-8">
                   <Text className="text-white text-3xl font-extrabold text-center leading-relaxed">
                     {stories[selectedStoryIndex].content}
@@ -881,6 +958,13 @@ const FeedScreen = ({ navigation }) => {
                 </TouchableOpacity>
               </View>
             )}
+=======
+                <View className="w-full h-3/4 rounded-2xl bg-blue-500 items-center justify-center p-8">
+                  <Text className="text-white text-3xl font-bold text-center">{selectedStory.content}</Text>
+                </View>
+              )}
+            </View>
+>>>>>>> 47463a7a08d38f17ffd1b4b51c6b0edcb0c65697
           </View>
         </Modal>
       )}

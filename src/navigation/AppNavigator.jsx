@@ -1,11 +1,19 @@
+<<<<<<< HEAD
 import React, { useEffect, useState, useRef } from 'react';
+=======
+import React, { useEffect, useState } from 'react';
+>>>>>>> 47463a7a08d38f17ffd1b4b51c6b0edcb0c65697
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Home, Briefcase, GraduationCap, Users, MessageSquare, Plus, Code, Bell, UserCheck } from 'lucide-react-native';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth, db } from '../firebase';
+<<<<<<< HEAD
 import { collection, query, where, getDocs, onSnapshot } from 'firebase/firestore';
+=======
+import { collection, query, where, getDocs } from 'firebase/firestore';
+>>>>>>> 47463a7a08d38f17ffd1b4b51c6b0edcb0c65697
 import { View, ActivityIndicator, TouchableOpacity, Image, Text } from 'react-native';
 
 // Import Screens
@@ -18,6 +26,7 @@ import ConnectStudentsScreen from '../screens/ConnectStudentsScreen';
 import ProfileDashboardScreen from '../screens/ProfileDashboardScreen';
 import MessagesScreen from '../screens/MessagesScreen';
 import CreatePostScreen from '../screens/CreatePostScreen';
+<<<<<<< HEAD
 import ProjectDetailsScreen from '../screens/ProjectDetailsScreen';
 import NotificationSettingsScreen from '../screens/NotificationSettingsScreen';
 import StartupHub from '../pages/StartupHub';
@@ -34,6 +43,11 @@ import {
   markAllDirectMessagesAsRead,
   isMessageUnread
 } from '../services/unreadMessageService';
+=======
+import CommunityScreen from '../screens/CommunityScreen';
+import ProjectDetailsScreen from '../screens/ProjectDetailsScreen';
+import StartupHub from '../pages/StartupHub';
+>>>>>>> 47463a7a08d38f17ffd1b4b51c6b0edcb0c65697
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -43,6 +57,7 @@ const DummyComponent = () => null;
 
 function TabNavigator({ navigation }) {
   const [avatar, setAvatar] = useState('https://randomuser.me/api/portraits/men/46.jpg');
+<<<<<<< HEAD
   const [unreadDMsCount, setUnreadDMsCount] = useState(0);
   const cachedMessagesRef = useRef([]);
 
@@ -91,6 +106,18 @@ function TabNavigator({ navigation }) {
       unsubUpdates();
       unsub();
     };
+=======
+
+  useEffect(() => {
+    if (auth.currentUser) {
+      const q = query(collection(db, 'profiles'), where('uid', '==', auth.currentUser.uid));
+      getDocs(q).then(querySnapshot => {
+        if (!querySnapshot.empty) {
+          setAvatar(querySnapshot.docs[0].data().imageUrl || 'https://randomuser.me/api/portraits/men/46.jpg');
+        }
+      }).catch(console.error);
+    }
+>>>>>>> 47463a7a08d38f17ffd1b4b51c6b0edcb0c65697
   }, []);
 
   return (
@@ -116,7 +143,11 @@ function TabNavigator({ navigation }) {
             <TouchableOpacity onPress={() => navigation.navigate('Connect')} style={{ marginRight: 16 }}>
               <UserCheck size={24} color="#4b5563" />
             </TouchableOpacity>
+<<<<<<< HEAD
             <TouchableOpacity onPress={() => navigation.navigate('NotificationSettings')} style={{ marginRight: 16 }}>
+=======
+            <TouchableOpacity style={{ marginRight: 16 }}>
+>>>>>>> 47463a7a08d38f17ffd1b4b51c6b0edcb0c65697
               <Bell size={24} color="#4b5563" />
             </TouchableOpacity>
             <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
@@ -184,6 +215,7 @@ function TabNavigator({ navigation }) {
         }}
       />
 
+<<<<<<< HEAD
       <Tab.Screen
         name="Messages"
         component={MessagesScreen}
@@ -200,6 +232,9 @@ function TabNavigator({ navigation }) {
           tabBarBadgeStyle: { backgroundColor: '#0a66c2', color: '#ffffff', fontSize: 10, fontWeight: 'bold' }
         }}
       />
+=======
+      <Tab.Screen name="Messages" component={MessagesScreen} options={{ headerShown: false }} />
+>>>>>>> 47463a7a08d38f17ffd1b4b51c6b0edcb0c65697
       <Tab.Screen name="Profile" component={ProfileDashboardScreen} />
     </Tab.Navigator>
   );
@@ -210,6 +245,7 @@ export default function AppNavigator() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+<<<<<<< HEAD
     let notifCleanup = null;
     let messagesUnsub = null;
 
@@ -276,6 +312,13 @@ export default function AppNavigator() {
       if (messagesUnsub) messagesUnsub();
       if (notifCleanup) notifCleanup();
     };
+=======
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+      setLoading(false);
+    });
+    return unsubscribe;
+>>>>>>> 47463a7a08d38f17ffd1b4b51c6b0edcb0c65697
   }, []);
 
   if (loading) {
@@ -287,13 +330,20 @@ export default function AppNavigator() {
   }
 
   return (
+<<<<<<< HEAD
     <NavigationContainer ref={navigationRef}>
+=======
+    <NavigationContainer>
+>>>>>>> 47463a7a08d38f17ffd1b4b51c6b0edcb0c65697
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         {user ? (
           <>
             <Stack.Screen name="MainTabs" component={TabNavigator} />
             <Stack.Screen name="Profile" component={ProfileDashboardScreen} />
+<<<<<<< HEAD
             <Stack.Screen name="NotificationSettings" component={NotificationSettingsScreen} />
+=======
+>>>>>>> 47463a7a08d38f17ffd1b4b51c6b0edcb0c65697
             <Stack.Screen 
               name="Connect" 
               component={ConnectStudentsScreen} 
@@ -320,6 +370,14 @@ export default function AppNavigator() {
               }} 
             />
             <Stack.Screen 
+<<<<<<< HEAD
+=======
+              name="Community" 
+              component={CommunityScreen} 
+              options={{ headerShown: false }} 
+            />
+            <Stack.Screen 
+>>>>>>> 47463a7a08d38f17ffd1b4b51c6b0edcb0c65697
               name="ProjectDetails" 
               component={ProjectDetailsScreen} 
               options={{ headerShown: false }} 

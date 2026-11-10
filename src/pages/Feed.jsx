@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from 'react';
+<<<<<<< HEAD
 import { Image, Video, Calendar, FileText, Heart, MessageCircle, Share2, Bookmark, MoreHorizontal, UserPlus, X, Send, Smile, Check, Plus, ChevronLeft, ChevronRight } from 'lucide-react';
+=======
+import { Image, Video, Calendar, FileText, Heart, MessageCircle, Share2, Bookmark, MoreHorizontal, UserPlus, X, Send, Smile, Check, Plus } from 'lucide-react';
+>>>>>>> 47463a7a08d38f17ffd1b4b51c6b0edcb0c65697
 import { auth, db } from '../firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import { collection, query, where, getDocs, onSnapshot, orderBy, addDoc, updateDoc, doc, deleteDoc } from 'firebase/firestore';
@@ -11,6 +15,7 @@ const Feed = () => {
   const [stories, setStories] = useState([]);
   
   const [selectedStory, setSelectedStory] = useState(null);
+<<<<<<< HEAD
   const [selectedStoryIndex, setSelectedStoryIndex] = useState(null);
   const [storyProgress, setStoryProgress] = useState(0);
 
@@ -55,6 +60,8 @@ const Feed = () => {
 
     return () => clearInterval(timer);
   }, [selectedStoryIndex, stories.length]);
+=======
+>>>>>>> 47463a7a08d38f17ffd1b4b51c6b0edcb0c65697
   const [isStoryModalOpen, setIsStoryModalOpen] = useState(false);
   const [newStoryName, setNewStoryName] = useState('');
   const [newStoryText, setNewStoryText] = useState('');
@@ -344,6 +351,7 @@ const Feed = () => {
               <span className="text-xs font-medium text-gray-500 text-center">Add Story</span>
             </div>
 
+<<<<<<< HEAD
             {stories.map((story, index) => (
               <div
                 key={story.fbId || story.id || index}
@@ -352,6 +360,13 @@ const Feed = () => {
                   setSelectedStoryIndex(index);
                   setStoryProgress(0);
                 }}
+=======
+            {stories.map((story) => (
+              <div
+                key={story.id}
+                className="flex flex-col items-center space-y-1 w-16 cursor-pointer group"
+                onClick={() => setSelectedStory(story)}
+>>>>>>> 47463a7a08d38f17ffd1b4b51c6b0edcb0c65697
               >
                 <div className="w-16 h-16 rounded-full border-[3px] border-linkedin-blue p-0.5 group-hover:scale-105 transition-transform">
                   <img src={story.seed?.startsWith('http') || story.seed?.startsWith('data:') ? story.seed : `https://randomuser.me/api/portraits/${story.seed || 'lego/1.jpg'}`} className="w-full h-full rounded-full bg-gray-100 object-cover" alt={story.name} />
